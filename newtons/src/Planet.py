@@ -1,10 +1,12 @@
+import copy
 import math
 import pygame
 
 
 class Planet(pygame.sprite.Sprite):
-    def __init__(self, background, size, mass, pos, vel=(0, 0), acc=(0, 0)):
+    def __init__(self, name, background, size, mass, pos, vel=(0, 0), acc=(0, 0)):
         super().__init__()
+        self.name = name
 
         self.background = background
         self.size = size
@@ -40,24 +42,22 @@ class SolarSystem:
     def __init__(self, background):
         self.background = background
         self.size = background.get_size()
-        self.sun = Planet(background, size=20, mass=100000, pos=(self.size[0] * 0.5, self.size[1] * 0.5))
-        self.earth = Planet(background, size=4, mass=10, pos=(self.size[0] * 0.5, 100), vel=(2, 0))
-        self.mars = Planet(background, size=5, mass=12, pos=(400, self.size[1] * 0.5), vel=(0, 1))
+        self.sun = Planet('sun', background, size=50, mass=1000000, pos=(self.size[0] * 0.5, self.size[1] * 0.5))
 
-        self.planets = [self.sun, self.earth, self.mars]
+        self.planets = [
+            Planet('earth', background, size=4, mass=10, pos=(self.size[0] * 0.5, 100), vel=(1, 0)),
+            Planet('mars', background, size=5, mass=12, pos=(self.size[0] * 0.5, 400), vel=(1, 0))
+        ]
 
     def step(self):
+        [planet.apply_force(self.sun) for planet in self.planets]
+        [planet.step() for planet in self.planets]
+        self.sun.draw()
 
-
-
-
-        self.mars.step()
-        self.earth.step()
-        self.sun.step()
-
-        self.mars.apply_force(self.sun)
-        self.earth.apply_force(self.sun)
-        self.sun.apply_force(self.earth)
+    def get_planet(self, name):
+        for planet in self.planets:
+            if planet.name == name:
+                return planet
 
 
 def calc_newton(plan1, plan2):

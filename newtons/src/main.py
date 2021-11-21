@@ -5,12 +5,12 @@ from Planet import Planet, SolarSystem
 BLACK = pg.Color("BLACK")
 WHITE = pg.Color("WHITE")
 
-SCREEN_SIZE = (1400, 1000)
+SCREEN_SIZE = (1800, 1300)
 
 
 def main():
     properties = {'in_play': True,
-                  'tick': 21}
+                  'tick': 101}
 
     pg.init()
     screen = pg.display.set_mode(SCREEN_SIZE)
@@ -43,9 +43,9 @@ def check_input(properties):
                 properties['in_play'] = not properties['in_play']
 
             if event.key == pg.K_UP:
-                properties['tick'] = properties['tick'] + 5
+                properties['tick'] = properties['tick'] + 10
             if event.key == pg.K_DOWN:
-                properties['tick'] = properties['tick'] - 5
+                properties['tick'] = properties['tick'] - 10
 
 
 if __name__ == '__main__':
