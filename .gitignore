@@ -1,0 +1,9 @@
+# Intellij
+.idea/
+
+
+# Python
+*.pyc
+*/*.pyc
+*/*/*.pyc
+*/*/*/*.pyc
