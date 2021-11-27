@@ -2,6 +2,58 @@ import copy
 import math
 import pygame
 
+SCALE_FACTOR = 5 * 10 ** -15
+
+sun_mass = 1.989 * 10 ** 30
+
+mercury_mass = 3.3011 * 10 ** 23
+mercury_distance = 70 + 150
+
+venus_mass = 4.867 * 10 ** 24
+venus_distance = 108 + 150
+
+earth_mass = 5.972 * 10 ** 24
+earth_distance = 147 + 150
+
+mars_mass = 6.39 * 10 ** 23
+mars_distance = 237 + 150
+
+jupiter_mass = 1.898 * 10 ** 27 * 10**-2
+jupiter_distance = 500
+
+
+class SolarSystem:
+    def __init__(self, background):
+        self.background = background
+        self.size = background.get_size()
+        self.sun = Planet('sun', background, size=10, mass=sun_mass,
+                          pos=(self.size[0] * 0.5, self.size[1] * 0.5))
+
+        self.planets = [
+            Planet('mercury', background, size=2, mass=mercury_mass,
+                   pos=(self.size[0] * 0.5, self.size[1] * 0.5 - mercury_distance), vel=(1, 0)),
+            Planet('venus', background, size=3, mass=venus_mass,
+                   pos=(self.size[0] * 0.5, self.size[1] * 0.5 - venus_distance), vel=(3, 0)),
+            Planet('earth', background, size=3, mass=earth_mass,
+                   pos=(self.size[0] * 0.5, self.size[1] * 0.5 - earth_distance), vel=(3, 0)),
+            Planet('mars', background, size=2, mass=mars_mass,
+                   pos=(self.size[0] * 0.5, self.size[1] * 0.5 - mars_distance),
+                   vel=(1, 0)),
+            Planet('jupiter', background, size=2, mass=jupiter_mass,
+                   pos=(self.size[0] * 0.5, self.size[1] * 0.5 - jupiter_distance),
+                   vel=(3, 0))
+        ]
+
+    def step(self):
+        [planet.apply_force(self.sun) for planet in self.planets]
+        [planet.step() for planet in self.planets]
+        self.sun.draw()
+
+    def get_planet(self, name):
+        for planet in self.planets:
+            if planet.name == name:
+                return planet
+
 
 class Planet(pygame.sprite.Sprite):
     def __init__(self, name, background, size, mass, pos, vel=(0, 0), acc=(0, 0)):
@@ -33,37 +85,15 @@ class Planet(pygame.sprite.Sprite):
 
     def apply_force(self, other):
         force_newton = calc_newton(self, other)
-        force_centi = calc_centrifugal(self, other)
-        self.acc = (force_newton[0] + force_centi[0], force_newton[1] + force_centi[1])
+        self.acc = (force_newton[0], force_newton[1])
         return
-
-
-class SolarSystem:
-    def __init__(self, background):
-        self.background = background
-        self.size = background.get_size()
-        self.sun = Planet('sun', background, size=50, mass=1000000, pos=(self.size[0] * 0.5, self.size[1] * 0.5))
-
-        self.planets = [
-            Planet('earth', background, size=4, mass=10, pos=(self.size[0] * 0.5, 100), vel=(1, 0)),
-            Planet('mars', background, size=5, mass=12, pos=(self.size[0] * 0.5, 400), vel=(1, 0))
-        ]
-
-    def step(self):
-        [planet.apply_force(self.sun) for planet in self.planets]
-        [planet.step() for planet in self.planets]
-        self.sun.draw()
-
-    def get_planet(self, name):
-        for planet in self.planets:
-            if planet.name == name:
-                return planet
 
 
 def calc_newton(plan1, plan2):
     # F = G*M_1*M_2/(r* r^) = C * (1/dx² * x^ + 1/dy² * y^)
     r = calc_distance(plan1.pos, plan2.pos)
-    C = plan1.mass * plan2.mass * math.pow(r, -3) * 6.67 * (10 ** -11)
+    r = r * 10 ** 9
+    C = plan1.mass * plan2.mass * math.pow(r, -3) * 6.67 * (10 ** -11) * SCALE_FACTOR
     fx = C * (plan2.pos[0] - plan1.pos[0])
     fy = C * (plan2.pos[1] - plan1.pos[1])
     return fx, fy
