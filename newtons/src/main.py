@@ -5,12 +5,12 @@ from Planet import Planet, SolarSystem
 BLACK = pg.Color("BLACK")
 WHITE = pg.Color("WHITE")
 
-SCREEN_SIZE = (1800, 1300)
+SCREEN_SIZE = (1800, 1350)
 
 
 def main():
     properties = {'in_play': True,
-                  'tick': 1}
+                  'tick': 41}
 
     pg.init()
     screen = pg.display.set_mode(SCREEN_SIZE)

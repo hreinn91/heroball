@@ -18,10 +18,10 @@ earth_distance = 147 + 150
 mars_mass = 6.39 * 10 ** 23
 mars_distance = 237 + 150
 
-jupiter_mass = 1.898 * 10 ** 27 * 10**-2
+jupiter_mass = 1.898 * 10 ** 27 * 10 ** -2
 jupiter_distance = 550
 
-saturn_mass = 5.638 * 10 ** 26 * 10**-2
+saturn_mass = 5.638 * 10 ** 26 * 10 ** -2
 saturn_distance = 625
 
 
@@ -31,6 +31,7 @@ class SolarSystem:
         self.size = background.get_size()
         self.sun = Planet('sun', background, size=10, mass=sun_mass,
                           pos=(self.size[0] * 0.5, self.size[1] * 0.5))
+        self.top_force = 0
 
         self.planets = [
             Planet('mercury', background, size=2, mass=mercury_mass,
@@ -51,7 +52,10 @@ class SolarSystem:
         ]
 
     def step(self):
+        # Apply Sun
         [planet.apply_force(self.sun) for planet in self.planets]
+        self.apply_newton_between_planets()
+
         [planet.step() for planet in self.planets]
         self.sun.draw()
 
@@ -59,6 +63,16 @@ class SolarSystem:
         for planet in self.planets:
             if planet.name == name:
                 return planet
+
+    def apply_newton_between_planets(self):
+        for i in range(0, len(self.planets)):
+            for j in range(i + 1, len(self.planets)):
+                self.planets_apply_newton(self.planets[i], self.planets[j])
+
+    @staticmethod
+    def planets_apply_newton(p1, p2):
+        p1.apply_force(p2)
+        p2.apply_force(p1)
 
 
 class Planet(pygame.sprite.Sprite):
@@ -88,11 +102,12 @@ class Planet(pygame.sprite.Sprite):
     def step(self):
         self.draw()
         self.move()
+        self.acc = (0, 0)
 
     def apply_force(self, other):
         force_newton = calc_newton(self, other)
-        self.acc = (force_newton[0], force_newton[1])
-        return
+        self.acc = (self.acc[0] + force_newton[0], self.acc[1] + force_newton[1])
+        return force_newton
 
 
 def calc_newton(plan1, plan2):
