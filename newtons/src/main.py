@@ -10,7 +10,7 @@ SCREEN_SIZE = (1800, 1300)
 
 def main():
     properties = {'in_play': True,
-                  'tick': 11}
+                  'tick': 1}
 
     pg.init()
     screen = pg.display.set_mode(SCREEN_SIZE)

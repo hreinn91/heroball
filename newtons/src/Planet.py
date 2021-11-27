@@ -19,7 +19,10 @@ mars_mass = 6.39 * 10 ** 23
 mars_distance = 237 + 150
 
 jupiter_mass = 1.898 * 10 ** 27 * 10**-2
-jupiter_distance = 500
+jupiter_distance = 550
+
+saturn_mass = 5.638 * 10 ** 26 * 10**-2
+saturn_distance = 625
 
 
 class SolarSystem:
@@ -41,7 +44,10 @@ class SolarSystem:
                    vel=(1, 0)),
             Planet('jupiter', background, size=2, mass=jupiter_mass,
                    pos=(self.size[0] * 0.5, self.size[1] * 0.5 - jupiter_distance),
-                   vel=(3, 0))
+                   vel=(5, 0)),
+            Planet('saturn', background, size=2, mass=saturn_mass,
+                   pos=(self.size[0] * 0.5, self.size[1] * 0.5 - saturn_distance),
+                   vel=(2, 0))
         ]
 
     def step(self):
